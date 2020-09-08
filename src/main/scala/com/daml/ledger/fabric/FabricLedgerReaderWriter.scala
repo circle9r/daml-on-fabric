@@ -12,7 +12,6 @@ import com.daml.ledger.participant.state.kvutils.Bytes
 import com.daml.ledger.participant.state.kvutils.api.{LedgerReader, LedgerRecord, LedgerWriter}
 import com.daml.ledger.participant.state.v1.{LedgerId, Offset, ParticipantId, SubmissionResult}
 import com.daml.ledger.validator.{SubmissionValidator, ValidatingCommitter}
-import com.daml.lf.engine.Engine
 import com.daml.metrics.Metrics
 import com.daml.platform.akkastreams.dispatcher.Dispatcher
 import com.daml.resources.ResourceOwner
@@ -24,8 +23,7 @@ class FabricLedgerReaderWriter(
     ledgerId: LedgerId,
     timeProvider: TimeProvider,
     metrics: Metrics,
-    dispatcher: Dispatcher[Index],
-    engine: Engine
+    dispatcher: Dispatcher[Index]
 )(implicit executionContext: ExecutionContext)
     extends LedgerReader
     with LedgerWriter {
@@ -44,7 +42,6 @@ class FabricLedgerReaderWriter(
     SubmissionValidator
       .create(
         ledgerStateAccess = new FabricLedgerStateAccess(),
-        engine = engine,
         metrics = metrics
       ),
     dispatcher.signalNewHead
