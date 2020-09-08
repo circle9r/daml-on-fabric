@@ -29,6 +29,7 @@ public class FabricContextConfigYaml {
     public static class NodeConfig {
         public String name;
         public String url;
+        public String sslTargetNameOverride;
         public NodeConfig() {}
     }
 

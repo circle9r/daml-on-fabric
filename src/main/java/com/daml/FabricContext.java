@@ -138,7 +138,7 @@ public final class FabricContext {
             peersByOrg.put(org.name, new ArrayList<Peer>());
             if(org.peers != null) {
                 for (FabricContextConfigYaml.NodeConfig configPeer : org.peers) {
-                    Peer fabPeer = createPeer(configPeer.url, configPeer.name, org);
+                    Peer fabPeer = createPeer(configPeer.url, configPeer.name, configPeer.sslTargetNameOverride, org);
                     peers.add(fabPeer);
                     peersByOrg.get(org.name).add(fabPeer);
                     fabClient.setUserContext(getOrgAdmin(org));
@@ -885,13 +885,14 @@ public final class FabricContext {
      *
      * @param peerURL peer endpoint
      * @param peerName peer name
+     * @param sslTargetNameOverride ssl target name override
      * @param org organizationConfig of the peer
      * @return Peer object
      */
-    private Peer createPeer(String peerURL, String peerName, FabricContextConfigYaml.OrganizationConfig org) {
+    private Peer createPeer(String peerURL, String peerName, String sslTargetNameOverride, FabricContextConfigYaml.OrganizationConfig org) {
 
         try {
-            return fabClient.newPeer(peerName, peerURL, createProperties(30, org, String.format("%s.%s", peerName,org.name)));
+            return fabClient.newPeer(peerName, peerURL, createProperties(30, org, String.format("%s", sslTargetNameOverride)));
         } catch (Throwable t) {
             if (RuntimeException.class.isAssignableFrom(t.getClass())) {
                 throw (RuntimeException)t;
