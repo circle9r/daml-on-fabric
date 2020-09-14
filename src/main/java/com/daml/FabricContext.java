@@ -129,7 +129,7 @@ public final class FabricContext {
         for (FabricContextConfigYaml.OrganizationConfig org : config.organizations) {
             if(org.orderers != null) {
                 for (FabricContextConfigYaml.NodeConfig orderer : org.orderers) {
-                    networkOrderers.add(createOrderer(orderer.url, orderer.name, org));
+		    networkOrderers.add(createOrderer(orderer.url, orderer.name, orderer.sslTargetNameOverride, org));
                 }
             }
         }
@@ -157,7 +157,7 @@ public final class FabricContext {
         constructChannel(config.channel.name, networkOrderers, peers, createFabricChannel);
 
         Path metaInfPath = null;
-        if (Files.exists(Paths.get(config.channel.chaincode.metapath))) {
+	if (config.channel.chaincode.metapath != null && Files.exists(Paths.get(config.channel.chaincode.metapath))) {
             metaInfPath = Paths.get(config.channel.chaincode.metapath);
             debugOut("META-INF folder detected. Starting chaincode with custom indexes");
         } else {
@@ -193,7 +193,7 @@ public final class FabricContext {
 
         ChannelConfiguration channelConfiguration;
 
-        String txFile = config.channel.channelTxFile;
+	String txFile = ((txFile = config.channel.channelTxFile) != null) ? txFile : "";
 
         if(txFile.isEmpty()){
           channelConfiguration = new ChannelConfiguration();
@@ -867,10 +867,12 @@ public final class FabricContext {
      * @param org organizationConfig of the orderer
      * @return Orderer object
      */
-    private Orderer createOrderer(String ordererURL, String ordererName, FabricContextConfigYaml.OrganizationConfig org) {
+    private Orderer createOrderer(String ordererURL, String ordererName, String ordererTargetNameOverride, FabricContextConfigYaml.OrganizationConfig org) {
+
+	Properties ordererSsl = (ordererTargetNameOverride == null) ? createProperties(30, org, String.format("%s.%s", ordererName, org.name)) : createProperties(30, org, String.format("%s", ordererTargetNameOverride));
 
         try {
-            return fabClient.newOrderer(ordererName, ordererURL, createProperties(30, org, String.format("%s.%s", ordererName, org.name)));
+	    return fabClient.newOrderer(ordererName, ordererURL, ordererSsl);
         } catch (Throwable t) {
             if (RuntimeException.class.isAssignableFrom(t.getClass())) {
                 throw (RuntimeException)t;
@@ -891,8 +893,10 @@ public final class FabricContext {
      */
     private Peer createPeer(String peerURL, String peerName, String sslTargetNameOverride, FabricContextConfigYaml.OrganizationConfig org) {
 
+	Properties peerSsl = (sslTargetNameOverride == null) ? createProperties(30, org, String.format("%s.%s", peerName, org.name)) : createProperties(30, org, String.format("%s", sslTargetNameOverride));
+
         try {
-            return fabClient.newPeer(peerName, peerURL, createProperties(30, org, String.format("%s", sslTargetNameOverride)));
+	    return fabClient.newPeer(peerName, peerURL, peerSsl);
         } catch (Throwable t) {
             if (RuntimeException.class.isAssignableFrom(t.getClass())) {
                 throw (RuntimeException)t;
