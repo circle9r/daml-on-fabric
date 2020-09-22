@@ -185,7 +185,7 @@ class FabricParticipantState(
           val allUpdates =
             damlStateUpdates.map {
               case (k, v) =>
-                NS_DAML_STATE.concat(keyValueCommitting.packDamlStateKey(k)) ->
+                NS_DAML_STATE.concat(k.toByteString()) ->
                   Envelope.enclose(v)
             } + (entryId.getEntryId -> Envelope.enclose(logEntry))
 
@@ -491,7 +491,7 @@ class FabricParticipantState(
 
     lazy val valueFromFabric = {
       lazy val entryBytes: Array[Byte] = fabricConn.getValue(
-        NS_DAML_STATE.concat(keyValueCommitting.packDamlStateKey(key)).toByteArray
+        NS_DAML_STATE.concat(key.toByteString()).toByteArray
       )
       if (entryBytes == null || entryBytes.isEmpty)
         None

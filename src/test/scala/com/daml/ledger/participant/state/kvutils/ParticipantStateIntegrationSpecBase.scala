@@ -12,7 +12,7 @@ import akka.stream.scaladsl.{Sink, Source}
 import com.codahale.metrics.MetricRegistry
 import com.daml.daml_lf_dev.DamlLf
 import com.daml.ledger.api.testing.utils.AkkaBeforeAndAfterAll
-import com.daml.ledger.participant.state.kvutils.KVOffset.{fromLong => toOffset}
+import com.daml.ledger.participant.state.kvutils.OffsetBuilder.{fromLong => toOffset}
 import com.daml.ledger.participant.state.kvutils.ParticipantStateIntegrationSpecBase._
 import com.daml.ledger.participant.state.v1.Update._
 import com.daml.ledger.participant.state.v1._
@@ -22,6 +22,7 @@ import com.daml.lf.data.Time.Timestamp
 import com.daml.lf.data.{ImmArray, Ref}
 import com.daml.lf.transaction.test.TransactionBuilder
 import com.daml.lf.transaction.{Transaction => Tx}
+import com.daml.lf.transaction.SubmittedTransaction
 import com.daml.logging.LoggingContext
 import com.daml.logging.LoggingContext.newLoggingContext
 import com.daml.metrics.Metrics
@@ -712,7 +713,7 @@ object ParticipantStateIntegrationSpecBase {
   private val IdleTimeout: FiniteDuration = 5.seconds
 
   private val emptyTransaction: SubmittedTransaction =
-    Tx.SubmittedTransaction(TransactionBuilder.Empty)
+    (SubmittedTransaction(TransactionBuilder.Empty))
 
   private val dummyEstimatedTransactionCost = 0L
 

@@ -7,6 +7,7 @@ import akka.stream.Materializer
 import com.daml.DAMLKVConnector
 import com.daml.ledger.participant.state.kvutils.app._
 import com.daml.ledger.participant.state.v1.SeedService.Seeding
+import com.daml.ledger.participant.state.v1.LedgerId
 import com.daml.lf.engine.Engine
 import com.daml.logging.LoggingContext
 import com.daml.logging.LoggingContext.newLoggingContext
@@ -56,10 +57,10 @@ object SimplifiedFabricMain {
         }
 
         val metrics = createMetrics(participantConfig, config)
-
+        val lId: Option[LedgerId] = Option(new LedgerId(config.ledgerId))
         for {
           ledger <- new FabricKeyValueLedger.Owner(
-            config.ledgerId,
+            lId,
             participantConfig.participantId,
             dispatcher = dispatcher,
             metrics = metrics,

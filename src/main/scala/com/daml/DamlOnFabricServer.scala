@@ -11,13 +11,22 @@ import akka.actor.ActorSystem
 import akka.stream.Materializer
 import com.codahale.metrics.SharedMetricRegistries
 import com.daml.daml_lf_dev.DamlLf.Archive
-import com.daml.ledger.participant.state.v1.{Configuration, SubmissionId, TimeModel, WritePackagesService}
+import com.daml.ledger.participant.state.v1.{
+  Configuration,
+  SubmissionId,
+  TimeModel,
+  WritePackagesService
+}
 import com.daml.lf.archive.DarReader
 import com.daml.lf.engine.Engine
 import com.daml.logging.LoggingContext.newLoggingContext
 import com.daml.metrics.{JvmMetricSet, Metrics}
 import com.daml.platform.apiserver.{ApiServerConfig, StandaloneApiServer}
-import com.daml.platform.configuration.{CommandConfiguration, LedgerConfiguration, PartyConfiguration}
+import com.daml.platform.configuration.{
+  CommandConfiguration,
+  LedgerConfiguration,
+  PartyConfiguration
+}
 import com.daml.platform.indexer.{IndexerConfig, StandaloneIndexerServer}
 import com.daml.platform.store.dao.events.LfValueTranslation
 import com.daml.resources.akka.AkkaResourceOwner
@@ -141,7 +150,7 @@ object DamlOnFabricServer extends App {
                 authService = authService,
                 metrics = metrics,
                 engine = sharedEngine,
-                lfValueTranslationCache = lfValueTranslationCache,
+                lfValueTranslationCache = lfValueTranslationCache
               ).acquire() if config.roleLedger
             } yield ()
           }
