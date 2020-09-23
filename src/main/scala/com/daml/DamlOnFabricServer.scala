@@ -144,7 +144,7 @@ object DamlOnFabricServer extends App {
                     maxDeduplicationTime = Duration.ofDays(1)
                   ),
                   initialConfigurationSubmitDelay = Duration.ofSeconds(5),
-                  configurationLoadTimeout = Duration.ofSeconds(300)
+                  configurationLoadTimeout = Duration.ofSeconds(30)
                 ),
                 optWriteService = Some(ledger),
                 authService = authService,
