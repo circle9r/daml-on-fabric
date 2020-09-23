@@ -869,7 +869,7 @@ public final class FabricContext {
      */
     private Orderer createOrderer(String ordererURL, String ordererName, String ordererTargetNameOverride, FabricContextConfigYaml.OrganizationConfig org) {
 
-	Properties ordererSsl = (ordererTargetNameOverride == null) ? createProperties(30, org, String.format("%s.%s", ordererName, org.name)) : createProperties(30, org, String.format("%s", ordererTargetNameOverride));
+	Properties ordererSsl = (ordererTargetNameOverride == null) ? createProperties(300, org, String.format("%s.%s", ordererName, org.name)) : createProperties(300, org, String.format("%s", ordererTargetNameOverride));
 
         try {
 	    return fabClient.newOrderer(ordererName, ordererURL, ordererSsl);
@@ -893,7 +893,7 @@ public final class FabricContext {
      */
     private Peer createPeer(String peerURL, String peerName, String sslTargetNameOverride, FabricContextConfigYaml.OrganizationConfig org) {
 
-	Properties peerSsl = (sslTargetNameOverride == null) ? createProperties(30, org, String.format("%s.%s", peerName, org.name)) : createProperties(30, org, String.format("%s", sslTargetNameOverride));
+	Properties peerSsl = (sslTargetNameOverride == null) ? createProperties(300, org, String.format("%s.%s", peerName, org.name)) : createProperties(300, org, String.format("%s", sslTargetNameOverride));
 
         try {
 	    return fabClient.newPeer(peerName, peerURL, peerSsl);
