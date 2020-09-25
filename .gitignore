@@ -20,3 +20,4 @@ lib/*
 /quickstart/
 .DS_Store
 /chaincode-image/.idea/
+.metals/
